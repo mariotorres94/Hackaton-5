@@ -1,0 +1,95 @@
+CREATE TABLE periodo_escolar(
+	id_periodo 		serial,
+	nombre_periodo	varchar(255) not null,
+	codigo_periodo 	varchar(255) not null,
+	PRIMARY KEY(id_periodo)
+);
+
+CREATE TABLE cursos(
+	id_curso 	 serial,
+	nombre_curso varchar(255) not null,
+	codigo_curso varchar(3) not null,
+	PRIMARY KEY(id_curso)
+);
+
+CREATE TABLE docentes(
+	id_docente   serial,
+	dni_profesor varchar(8) not null unique,
+	nombres 	 varchar(255) not null,
+	apellidos    varchar(255) not null,
+	correo		 varchar(255) not null,
+	edad		 int,
+	PRIMARY KEY(id_docente)
+);
+
+CREATE TABLE docente_curso(
+	id_docente serial,
+	id_curso   serial,
+	FOREIGN KEY(id_docente) REFERENCES docentes(id_docente),
+	FOREIGN KEY(id_curso) REFERENCES cursos(id_curso)
+);
+
+CREATE TABLE salones(
+	id_salon 	 serial,
+	nombre_salon varchar(255) not null,
+	PRIMARY KEY(id_salon)
+);
+
+CREATE TABLE salon_docente(
+	id_docente serial,
+	id_salon   serial,
+	FOREIGN KEY(id_docente) REFERENCES docentes(id_docente),
+	FOREIGN KEY(id_salon) REFERENCES salones(id_salon)
+);
+
+CREATE TABLE alumnos(
+	id_alumno	serial,
+	dni_alumno	varchar(8) not null unique,
+	nombres		varchar(255) not null,
+	apellidos	varchar(255) not null,
+	edad		int,
+	PRIMARY KEY(id_alumno)
+);
+
+CREATE TABLE salon_alumnos(
+	id_alumno serial,
+	id_salon  serial,
+	FOREIGN KEY(id_alumno) REFERENCES alumnos(id_alumno),
+	FOREIGN KEY(id_salon) REFERENCES salones(id_salon)
+);
+
+CREATE TABLE alumnos_cursos(
+	id_alumno serial,
+	id_curso  serial,
+	FOREIGN KEY(id_alumno) REFERENCES alumnos(id_alumno),
+	FOREIGN KEY(id_curso) REFERENCES cursos(id_curso)
+);
+
+CREATE TABLE notas(
+	id_nota		serial,
+	id_alumno	serial,
+	notas		float not null,
+	PRIMARY KEY(id_nota)
+);
+
+CREATE TABLE alumno_notas(
+	id_alumno	serial,
+	id_nota		serial,
+	FOREIGN KEY(id_alumno)   REFERENCES alumnos(id_alumno),
+	FOREIGN KEY(id_nota)   REFERENCES notas(id_nota)
+);
+
+CREATE TABLE periodo_general(
+	id_periodo		serial,
+	id_docente		serial,
+	id_salon		serial,
+	id_alumno		serial,
+	id_curso		serial,
+	id_nota			serial,
+	FOREIGN KEY(id_periodo) REFERENCES periodo_escolar(id_periodo),
+	FOREIGN KEY(id_docente) REFERENCES docentes(id_docente),
+	FOREIGN KEY(id_salon)   REFERENCES salones(id_salon),
+	FOREIGN KEY(id_alumno)  REFERENCES alumnos(id_alumno),
+	FOREIGN KEY(id_curso)   REFERENCES cursos(id_curso),
+	FOREIGN KEY(id_nota)    REFERENCES notas(id_nota)
+);
